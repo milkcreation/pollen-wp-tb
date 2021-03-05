@@ -9,19 +9,29 @@
 composer require pollen-solutions/wp-tb
 ```
 
+## Basic Usage
+```php
+use Pollen\WpTb\WpTb;
+
+new Wptb();
+```
+
+
 ## Pollen Framework Setup
 
 ### Declaration
 
 ```php
 // config/app.php
+use Pollen\WpTb\WpTbServiceProvider;
+
 return [
       //...
       'providers' => [
           //...
-          \Pollen\WpTb\WpTbServiceProvider::class,
+          WpTbServiceProvider::class,
           //...
-      ];
+      ]
       // ...
 ];
 ```
