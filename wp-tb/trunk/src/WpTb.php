@@ -4,38 +4,17 @@ declare(strict_types=1);
 
 namespace Pollen\WpTb;
 
-use Pollen\WpTb\Contracts\WpTbContract;
+use Pollen\Support\Concerns\BootableTrait;
+use Pollen\Support\Concerns\ConfigBagAwareTrait;
+use Pollen\Support\Proxy\ContainerProxy;
 use Psr\Container\ContainerInterface as Container;
-use RuntimeException;
-use tiFy\Contracts\Filesystem\LocalFilesystem;
-use tiFy\Support\Concerns\BootableTrait;
-use tiFy\Support\Concerns\ContainerAwareTrait;
-use tiFy\Support\ParamsBag;
-use tiFy\Support\Proxy\Storage;
 use WP_Admin_Bar;
 
-class WpTb implements WpTbContract
+class WpTb implements WpTbInterface
 {
     use BootableTrait;
-    use ContainerAwareTrait;
-
-    /**
-     * Instance de la classe.
-     * @var static|null
-     */
-    private static $instance;
-
-    /**
-     * Instance du gestionnaire de configuration.
-     * @var ParamsBag
-     */
-    private $configBag;
-
-    /**
-     * Instance du gestionnaire des ressources
-     * @var LocalFilesystem|null
-     */
-    private $resources;
+    use ConfigBagAwareTrait;
+    use ContainerProxy;
 
     /**
      * @param array $config
@@ -51,31 +30,17 @@ class WpTb implements WpTbContract
             $this->setContainer($container);
         }
 
-        if (!self::$instance instanceof static) {
-            self::$instance = $this;
+        if ($this->config('boot_enabled', true)) {
+            $this->boot();
         }
     }
 
     /**
      * @inheritDoc
      */
-    public static function instance(): WpTbContract
-    {
-        if (self::$instance instanceof self) {
-            return self::$instance;
-        }
-        throw new RuntimeException(sprintf('Unavailable %s instance', __CLASS__));
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function boot(): WpTbContract
+    public function boot(): WpTbInterface
     {
         if (!$this->isBooted()) {
-            events()->trigger('wp-tb.booting', [$this]);
-
             // - Balises de site.
             add_action('wp_head', function () {
                 echo "<!-- TigreBlanc Copyright -->";
@@ -203,49 +168,7 @@ class WpTb implements WpTbContract
             );
             
             $this->setBooted();
-
-            events()->trigger('wp-tb.booted', [$this]);
         }
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function config($key = null, $default = null)
-    {
-        if (!isset($this->configBag) || is_null($this->configBag)) {
-            $this->configBag = new ParamsBag();
-        }
-
-        if (is_string($key)) {
-            return $this->configBag->get($key, $default);
-        } elseif (is_array($key)) {
-            return $this->configBag->set($key);
-        } else {
-            return $this->configBag;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function resources(?string $path = null)
-    {
-        if (!isset($this->resources) || is_null($this->resources)) {
-            $this->resources = Storage::local(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'resources');
-        }
-
-        return is_null($path) ? $this->resources : $this->resources->path($path);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setConfig(array $attrs): WpTbContract
-    {
-        $this->config($attrs);
-
         return $this;
     }
 }
