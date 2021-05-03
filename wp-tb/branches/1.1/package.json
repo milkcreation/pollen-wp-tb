@@ -10,5 +10,6 @@
   "devDependencies": {
   },
   "dependencies": {
+    "@pollen-solutions/support": "file:../support/"
   }
 }
