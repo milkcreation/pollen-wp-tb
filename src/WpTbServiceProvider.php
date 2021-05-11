@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pollen\WpTb;
 
-use Pollen\Container\BaseServiceProvider;
+use Pollen\Container\BootableServiceProvider;
 
-class WpTbServiceProvider extends BaseServiceProvider
+class WpTbServiceProvider extends BootableServiceProvider
 {
     /**
      * @var string[]
