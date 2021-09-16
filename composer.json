@@ -1,26 +1,18 @@
 {
   "name": "pollen-solutions/wp-tb",
   "description": "Wordpress TigreBlanc Component",
-  "homepage": "https://www.presstify.com/pollen-solutions/wp-tb/",
+  "homepage": "https://github.com/milkcreation/pollen-wp-tb.git",
   "keywords": [
     "presstify",
     "plugins",
     "wordpress",
     "tigreblanc"
   ],
-  "time": "2021-05-11",
-  "license": "proprietary",
+  "time": "2021-09-16",
   "authors": [
     {
       "name": "Jordy Manner",
-      "email": "jordy@presstify.com",
-      "role": "Developper"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://composer.presstify.com/pollen-solutions/"
+      "email": "jordy@presstify.com"
     }
   ],
   "require": {
@@ -51,4 +43,3 @@
     "sort-packages": true
   }
 }
-
